@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="stylesheet" href="https://test.mavo.io/style.css" />
+
+		<link rel="stylesheet" href="https://get.mavo.io/mavo.css" />
+		<script src="https://get.mavo.io/mavo.js"></script>
+
+		<title>Autoload tests</title>
+	</head>
+	<body>
+		<h1>Autoload tests</h1>
+
+		<section>
+			<h2>Basic</h2>
+
+			<table class="reftest">
+				<tr title="The Markdown plugin">
+					<td mv-app>
+						<div class="markdown" property="markdown">Hello, I am **Dmitry Sharabin**. [Mavo](http://mavo.io) is awesome.</div>
+					</td>
+					<td>
+						<div>
+							<p>Hello, I am <strong>Dmitry Sharabin</strong>. <a href="http://mavo.io">Mavo</a> is awesome.</p>
+						</div>
+					</td>
+				</tr>
+				<tr title="The TinyMCE plugin">
+					<td mv-app class="mv-autoedit">
+						<div class="tinymce" property="richtext">
+							Hello, I am <strong>Dmitry Sharabin</strong>. <a href="http://mavo.io">Mavo</a> is awesome.
+						</div>
+					</td>
+					<td>
+						<div>
+							Hello, I am <strong>Dmitry Sharabin</strong>. <a href="http://mavo.io">Mavo</a> is awesome.
+						</div>
+					</td>
+				</tr>
+			</table>
+		</section>
+
+		<section>
+			<h2>Backends</h2>
+
+			<table class="reftest">
+				<tr title="Dropbox">
+					<td mv-app mv-storage="https://www.dropbox.com/s/5djray22aj0v7le/countries.json?dl=0">
+						<ul mv-list property="country">
+							<li mv-list-item>
+								<span property="code">Code</span>
+								<span property="name">Name</span>
+							</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>Online</li>
+							<li>us United States</li>
+							<li>gb United Kingdom</li>
+						</ul>
+					</td>
+				</tr>
+				<tr title="Firebase">
+					<td
+						mv-app
+						mv-source="firebase://mavo-demos/mavo-apps/countries"
+						mv-source-key="AIzaSyDvZ3EBuhlvFm529vMPeU7dbqvdkjv9WQU"
+						mv-source-options="auth"
+					>
+						<ul mv-list property="country">
+							<li mv-list-item>
+								<span property="code">Code</span>
+								<span property="name">Name</span>
+							</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>Online</li>
+							<li>us United States</li>
+							<li>gb United Kingdom</li>
+						</ul>
+					</td>
+				</tr>
+				<tr title="Google Sheets">
+					<td
+						mv-app
+						mv-source="https://docs.google.com/spreadsheets/d/1zAXcvnIMemiJ51xVmhV7arpSLEQLJaM_dqtosFVbXGQ/edit?usp=sharing"
+					>
+						<ul mv-list property="country">
+							<li mv-list-item>
+								<span property="code">Code</span>
+								<span property="name">Name</span>
+							</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>ru Russia</li>
+							<li>gr Greece</li>
+							<li>us USA</li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+		</section>
+
+		<script src="mavo-autoload.js"></script>
+		<script src="https://test.mavo.io/test.js"></script>
+	</body>
+</html>
