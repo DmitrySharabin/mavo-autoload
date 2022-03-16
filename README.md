@@ -4,4 +4,4 @@ Have you ever faced the issue when you tried to use a backend plugin (or any oth
 
 From this moment on, let Mavo load _all the needed plugins_ for you. The only thing you need to do is to add `mv-plugins="autoload"` to the root of your app, and you are done!
 
-**Note:** If for some reason a plugin wasn't downloaded automatically, you still can include it _the old way_: by adding its `id` (e.g., `twitter`) to the `mv-plugins` attribute. Like so: `mv-plugins="autoload twitter"`.
+**Note:** If for some reason a plugin wasn't loaded automatically, you still can include it _the old way_: by adding its `id` (e.g., `twitter`) to the `mv-plugins` attribute. Like so: `mv-plugins="autoload twitter"`.
