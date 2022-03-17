@@ -6,11 +6,9 @@
 			// Fetch plugin index
 			const response = await fetch(_.url + "/plugins.json");
 			const json = await response.json();
-			const plugins = json.plugin;
+			let plugins = json.plugin;
 
-			// Build plugin register
 			const ids = new Set();
-
 			for (const plugin of plugins) {
 				const { id, selector } = plugin;
 
@@ -18,35 +16,39 @@
 					continue;
 				}
 
-				if (!ids.has(id) && $(selector)) {
+				if (!_.loaded[id] && !ids.has(id) && $(selector)) {
 					ids.add(id);
 				}
 			}
 
-			resolve(
-				Mavo.thenAll(
-					plugins
-						.filter(plugin => ids.has(plugin.id))
-						.map(async plugin => {
-							if (_.loaded[plugin.id]) {
-								return Promise.resolve();
-							}
+			plugins = plugins.filter(plugin => ids.has(plugin.id));
+			const result = await Promise.allSettled(
+				plugins.map(async plugin => {
+					// Load plugin
+					const filename = `mavo-${plugin.id}.js`;
 
-							// Load plugin
-							const filename = `mavo-${plugin.id}.js`;
+					// Plugin hosted in a separate repo
+					let url = `https://cdn.jsdelivr.net/gh/${plugin.repo}/${filename}`;
 
-							// Plugin hosted in a separate repo
-							let url = `https://cdn.jsdelivr.net/gh/${plugin.repo}/${filename}`;
+					if (!plugin.repo) {
+						// Plugin hosted in the mavo-plugins repo
+						url = `${_.url}/${plugin.id}/${filename}`;
+					}
 
-							if (!plugin.repo) {
-								// Plugin hosted in the mavo-plugins repo
-								url = `${_.url}/${plugin.id}/${filename}`;
-							}
-
-							return $.include(_.loaded[plugin.id], url);
-						})
-				)
+					return $.include(_.loaded[plugin.id], url).then(() => plugin.id);
+				})
 			);
+
+			const loaded = result.filter(p => p.status === "fulfilled").map(p => p.value);
+			const failed = plugins.filter(p => !loaded.includes(p.id)).map(p => p.id);
+
+			console.log(`Mavo plugins loaded: ${loaded.length ? loaded.join(", ") : "none"}.`);
+
+			if (failed.length) {
+				console.log(`Mavo plugins failed to load: ${failed.join(", ")}.`);
+			}
+
+			resolve();
 		})
 	});
 })(Bliss);
